@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h1>Edit Task</h1>
+    <form action="/tasks/{{task._id}}?_method=PUT" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" value="{{task.title}}" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control">{{task.description}}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Project</label>
+        <select name="project" class="form-select" required>
+          {{#each projects}}
+            <option value="{{this._id}}" {{#ifEquals this._id ../task.project}}selected{{/ifEquals}}>{{this.name}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Assign To</label>
+        <select name="assignedTo" class="form-select">
+          <option value="">Unassigned</option>
+          {{#each users}}
+            <option value="{{this._id}}" {{#ifEquals this._id ../task.assignedTo}}selected{{/ifEquals}}>{{this.name}} ({{this.email}})</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+          {{#each ['Todo','In Progress','Completed','Blocked']}}
+            <option {{#ifEquals this ../task.status}}selected{{/ifEquals}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Due Date</label>
+        <input type="date" name="dueDate" class="form-control" value="{{task.dueDate}}" />
+      </div>
+      <button type="submit" class="btn btn-primary">Update Task</button>
+    </form>
+  </div>
+</div>

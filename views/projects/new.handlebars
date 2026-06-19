@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <h1>Create Project</h1>
+    <form action="/projects" method="POST">
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea name="description" class="form-control"></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Create Project</button>
+    </form>
+  </div>
+</div>

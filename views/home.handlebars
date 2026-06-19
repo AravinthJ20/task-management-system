@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-8">
+    <h1>Dashboard</h1>
+    <p>Recent projects and tasks.</p>
+
+    <div class="mb-4">
+      <h2>Projects</h2>
+      {{#if projects.length}}
+        <ul class="list-group">
+          {{#each projects}}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="/projects/{{this._id}}">{{this.name}}</a>
+              <span class="badge bg-secondary">{{this.createdAt}}</span>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p>No projects created yet.</p>
+      {{/if}}
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Quick Actions</h5>
+        <a href="/projects/new" class="btn btn-primary mb-2">Create Project</a>
+        <a href="/tasks/new" class="btn btn-secondary">Create Task</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Latest Tasks</h5>
+        {{#if tasks.length}}
+          <ul class="list-group list-group-flush">
+            {{#each tasks}}
+              <li class="list-group-item">
+                <strong>{{this.title}}</strong><br />
+                <small>{{this.project.name}} | {{this.status}}</small>
+              </li>
+            {{/each}}
+          </ul>
+        {{else}}
+          <p>No recent tasks.</p>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
