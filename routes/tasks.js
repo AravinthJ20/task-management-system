@@ -4,6 +4,9 @@ const Task = require('../models/Task');
 const Project = require('../models/Project');
 const User = require('../models/User');
 const { sendEmail } = require('../helpers/mailer');
+const { requireAuth } = require('../middleware/auth');
+
+router.use(requireAuth);
 
 router.get('/', async (req, res) => {
   const tasks = await Task.find().populate('project assignedTo').sort({ createdAt: -1 });

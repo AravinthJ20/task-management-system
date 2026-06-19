@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const { requireAuth } = require('../middleware/auth');
+
+router.use(requireAuth);
 
 router.get('/', async (req, res) => {
   const users = await User.find().sort({ name: 1 });
@@ -8,13 +11,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/new', (req, res) => {
-  res.render('users/new', { title: 'New User' });
+  res.redirect('/auth/register');
 });
 
 router.post('/', async (req, res) => {
-  const { name, email, role } = req.body;
-  await User.create({ name, email, role });
-  res.redirect('/users');
+  res.redirect('/auth/register');
 });
 
 module.exports = router;

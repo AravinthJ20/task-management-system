@@ -1,20 +1,8 @@
 <div class="row">
   <div class="col-md-8 offset-md-2">
-    <h1>Create User</h1>
-    <form action="/users" method="POST">
-      <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" name="name" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Role</label>
-        <input type="text" name="role" class="form-control" value="User" />
-      </div>
-      <button type="submit" class="btn btn-success">Create User</button>
-    </form>
+    <div class="alert alert-info">
+      User creation now happens through the registration flow so every account has login credentials.
+      <a href="/auth/register" class="alert-link">Open registration</a>.
+    </div>
   </div>
 </div>

@@ -19,6 +19,7 @@ A Node.js + Express + MongoDB project management app using Express Handlebars.
 ## Environment variables
 - `PORT`
 - `MONGODB_URI`
+- `AUTH_SECRET`
 - `EMAIL_HOST`
 - `EMAIL_PORT`
 - `EMAIL_USER`

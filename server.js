@@ -5,6 +5,7 @@ const methodOverride = require('method-override');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const hbs = require('./helpers/handlebars');
+const { loadCurrentUser } = require('./middleware/auth');
 
 dotenv.config();
 connectDB();
@@ -19,7 +20,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(loadCurrentUser);
 
+app.use('/auth', require('./routes/auth'));
 app.use('/', require('./routes/index'));
 app.use('/projects', require('./routes/projects'));
 app.use('/tasks', require('./routes/tasks'));

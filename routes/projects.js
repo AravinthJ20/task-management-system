@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Project = require('../models/Project');
 const Task = require('../models/Task');
+const { requireAuth } = require('../middleware/auth');
+
+router.use(requireAuth);
 
 router.get('/', async (req, res) => {
   const projects = await Project.find().sort({ createdAt: -1 });
