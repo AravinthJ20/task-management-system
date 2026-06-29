@@ -6,7 +6,7 @@ const { requireAuth } = require('../middleware/auth');
 router.use(requireAuth);
 
 router.get('/', async (req, res) => {
-  const users = await User.find().sort({ name: 1 });
+  const users = await User.find().sort({ name: 1 }).lean();
   res.render('users/index', { title: 'Users', users });
 });
 

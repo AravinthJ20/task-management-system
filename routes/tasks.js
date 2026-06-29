@@ -9,13 +9,13 @@ const { requireAuth } = require('../middleware/auth');
 router.use(requireAuth);
 
 router.get('/', async (req, res) => {
-  const tasks = await Task.find().populate('project assignedTo').sort({ createdAt: -1 });
+  const tasks = await Task.find().populate('project assignedTo').sort({ createdAt: -1 }).lean();
   res.render('tasks/index', { title: 'Tasks', tasks });
 });
 
 router.get('/new', async (req, res) => {
-  const projects = await Project.find().sort({ name: 1 });
-  const users = await User.find().sort({ name: 1 });
+  const projects = await Project.find().sort({ name: 1 }).lean();
+  const users = await User.find().sort({ name: 1 }).lean();
   res.render('tasks/new', { title: 'New Task', projects, users });
 });
 
@@ -38,9 +38,9 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/:id/edit', async (req, res) => {
-  const task = await Task.findById(req.params.id);
-  const projects = await Project.find().sort({ name: 1 });
-  const users = await User.find().sort({ name: 1 });
+  const task = await Task.findById(req.params.id).lean();
+  const projects = await Project.find().sort({ name: 1 }).lean();
+  const users = await User.find().sort({ name: 1 }).lean();
   res.render('tasks/edit', { title: 'Edit Task', task, projects, users });
 });
 

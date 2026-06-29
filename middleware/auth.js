@@ -27,7 +27,7 @@ async function loadCurrentUser(req, res, next) {
     }
 
     req.currentUser = user;
-    res.locals.currentUser = user;
+    res.locals.currentUser = user.toObject();
     res.locals.isAuthenticated = true;
     return next();
   } catch (error) {
