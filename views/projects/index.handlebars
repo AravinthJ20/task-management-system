@@ -1,22 +1,31 @@
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Projects</h1>
+<section class="page-header">
+  <div>
+    <span class="page-eyebrow">Projects</span>
+    <h1 class="page-title">Project portfolio</h1>
+    <p class="page-subtitle">Browse every initiative, check when it started, and open the details page for the full task breakdown.</p>
+  </div>
   <a class="btn btn-primary" href="/projects/new">New Project</a>
-</div>
+</section>
 {{#if projects.length}}
-  <table class="table table-striped">
-    <thead>
-      <tr><th>Name</th><th>Created</th><th></th></tr>
-    </thead>
-    <tbody>
-      {{#each projects}}
-        <tr>
-          <td><a href="/projects/{{this._id}}">{{this.name}}</a></td>
-          <td>{{this.createdAt}}</td>
-          <td><a href="/projects/{{this._id}}" class="btn btn-sm btn-outline-secondary">View</a></td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="table-shell">
+    <table class="table">
+      <thead>
+        <tr><th>Name</th><th>Description</th><th>Created</th><th></th></tr>
+      </thead>
+      <tbody>
+        {{#each projects}}
+          <tr>
+            <td>
+              <strong><a href="/projects/{{this._id}}">{{this.name}}</a></strong>
+            </td>
+            <td class="muted">{{this.description}}</td>
+            <td><span class="date-pill">{{formatDate this.createdAt}}</span></td>
+            <td><a href="/projects/{{this._id}}" class="btn btn-sm btn-outline-secondary">View</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 {{else}}
-  <p>No projects yet. Create one now.</p>
+  <div class="empty-state">No projects yet. Create one now to start organizing work into meaningful delivery streams.</div>
 {{/if}}

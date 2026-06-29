@@ -1,48 +1,442 @@
-<div class="row">
-  <div class="col-md-8">
-    <h1>Dashboard</h1>
-    <p>Recent projects and tasks.</p>
+<style>
+  .dashboard-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    border-radius: 30px;
+    background:
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.26), transparent 28%),
+      linear-gradient(135deg, #12453f 0%, #0f766e 54%, #d79a3a 100%);
+    color: #fffaf0;
+    margin-bottom: 1.5rem;
+  }
 
-    <div class="mb-4">
-      <h2>Projects</h2>
-      {{#if projects.length}}
-        <ul class="list-group">
-          {{#each projects}}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-              <a href="/projects/{{this._id}}">{{this.name}}</a>
-              <span class="badge bg-secondary">{{this.createdAt}}</span>
-            </li>
-          {{/each}}
-        </ul>
-      {{else}}
-        <p>No projects created yet.</p>
-      {{/if}}
+  .dashboard-hero::after {
+    content: '';
+    position: absolute;
+    inset: auto -40px -60px auto;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.10);
+    filter: blur(2px);
+  }
+
+  .dashboard-hero .hero-kicker {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(255, 250, 240, 0.14);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .dashboard-hero h1 {
+    font-size: clamp(2.3rem, 5vw, 4.2rem);
+    margin: 0.9rem 0 0.8rem;
+    max-width: 11ch;
+  }
+
+  .dashboard-hero p {
+    max-width: 560px;
+    color: rgba(255, 250, 240, 0.84);
+    font-size: 1.05rem;
+    margin-bottom: 0;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .hero-actions .btn-secondary {
+    background: rgba(255, 248, 238, 0.18);
+    color: #fffaf0;
+    border: 1px solid rgba(255, 248, 238, 0.24);
+  }
+
+  .hero-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .hero-mini-card {
+    padding: 1rem 1.1rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+  }
+
+  .hero-mini-label {
+    color: rgba(255, 250, 240, 0.74);
+    font-size: 0.84rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .hero-mini-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    line-height: 1;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.95fr);
+    gap: 1.5rem;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+  }
+
+  .dashboard-stack {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .spotlight-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) auto;
+    gap: 1rem;
+    align-items: start;
+    padding: 1.3rem;
+    border-radius: 24px;
+    background: linear-gradient(180deg, #fffdf9, #f6efe3);
+    border: 1px solid rgba(114, 92, 55, 0.12);
+  }
+
+  .spotlight-tag {
+    display: inline-flex;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: #e0f4ef;
+    color: #0f5f58;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.7rem;
+  }
+
+  .spotlight-card h3 {
+    margin: 0 0 0.45rem;
+  }
+
+  .spotlight-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .project-compact-list,
+  .timeline-list {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .project-compact-item,
+  .timeline-item {
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    background: rgba(247, 241, 232, 0.72);
+    border: 1px solid rgba(114, 92, 55, 0.08);
+  }
+
+  .project-compact-item h3,
+  .timeline-item h3 {
+    font-size: 1.05rem;
+    margin: 0 0 0.35rem;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    margin-top: 0.75rem;
+  }
+
+  .mini-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d0aa6a;
+  }
+
+  .kpi-band {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .kpi-band .metric-card {
+    padding: 1.25rem;
+  }
+
+  .action-tile-grid {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .action-tile {
+    display: block;
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fffefb, #f5efe4);
+    border: 1px solid rgba(114, 92, 55, 0.11);
+    color: inherit;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .action-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(80, 60, 26, 0.08);
+  }
+
+  .action-tile strong {
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .timeline-item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .timeline-item p,
+  .project-compact-item p,
+  .spotlight-card p {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 991.98px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .kpi-band,
+    .hero-mini-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .spotlight-card {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .dashboard-hero {
+      padding: 1.35rem;
+      border-radius: 24px;
+    }
+
+    .timeline-item-top,
+    .section-heading {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<section class="dashboard-hero">
+  <span class="hero-kicker">Workspace Overview</span>
+  <h1>Keep projects moving with clarity.</h1>
+  <p>See the health of your delivery pipeline at a glance, surface what needs attention, and jump straight into the next meaningful action.</p>
+
+  <div class="hero-actions">
+    <a href="/projects/new" class="btn btn-light">Create Project</a>
+    <a href="/tasks/new" class="btn btn-secondary">Create Task</a>
+    <a href="/tasks" class="btn btn-outline-light">Open Task Board</a>
+  </div>
+
+  <div class="hero-mini-grid">
+    <div class="hero-mini-card">
+      <div class="hero-mini-label">Completion rate</div>
+      <div class="hero-mini-value">{{stats.completionRate}}%</div>
+    </div>
+    <div class="hero-mini-card">
+      <div class="hero-mini-label">Blocked tasks</div>
+      <div class="hero-mini-value">{{stats.blockedTasks}}</div>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Quick Actions</h5>
-        <a href="/projects/new" class="btn btn-primary mb-2">Create Project</a>
-        <a href="/tasks/new" class="btn btn-secondary">Create Task</a>
+</section>
+
+<section class="kpi-band mb-4">
+  <div class="metric-card">
+    <div class="metric-label">Projects</div>
+    <div class="metric-value">{{stats.totalProjects}}</div>
+    <div class="muted mt-2">Active initiatives in your workspace</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">In Progress</div>
+    <div class="metric-value">{{stats.inProgressTasks}}</div>
+    <div class="muted mt-2">Tasks currently being worked on</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Unassigned</div>
+    <div class="metric-value">{{stats.unassignedTasks}}</div>
+    <div class="muted mt-2">Tasks still waiting for an owner</div>
+  </div>
+</section>
+
+<div class="dashboard-grid">
+  <div class="dashboard-stack">
+    <section class="panel-card">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Spotlight</span>
+          <h2 class="h3">Current project focus</h2>
+        </div>
+        <a href="/projects" class="btn btn-outline-secondary">All Projects</a>
       </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Latest Tasks</h5>
-        {{#if tasks.length}}
-          <ul class="list-group list-group-flush">
-            {{#each tasks}}
-              <li class="list-group-item">
-                <strong>{{this.title}}</strong><br />
-                <small>{{this.project.name}} | {{this.status}}</small>
-              </li>
-            {{/each}}
-          </ul>
-        {{else}}
-          <p>No recent tasks.</p>
-        {{/if}}
+
+      {{#if spotlightProject}}
+        <div class="spotlight-card">
+          <div>
+            <span class="spotlight-tag">Most Recent Project</span>
+            <h3>{{spotlightProject.name}}</h3>
+            <p class="muted">{{spotlightProject.description}}</p>
+            <div class="meta-row">
+              <span class="date-pill">{{formatDate spotlightProject.createdAt}}</span>
+              <span class="mini-dot"></span>
+              <span class="muted">Newly added to the workspace</span>
+            </div>
+          </div>
+          <div class="spotlight-actions">
+            <a href="/projects/{{spotlightProject._id}}" class="btn btn-primary">View Project</a>
+          </div>
+        </div>
+      {{else}}
+        <div class="empty-state">No projects yet. Start by creating one core project and use it as the base for your task flow.</div>
+      {{/if}}
+    </section>
+
+    <section class="panel-card">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Recent Work</span>
+          <h2 class="h3">Latest tasks</h2>
+        </div>
+        <a href="/tasks" class="btn btn-outline-secondary">All Tasks</a>
       </div>
-    </div>
+
+      {{#if tasks.length}}
+        <div class="timeline-list">
+          {{#each tasks}}
+            <article class="timeline-item">
+              <div class="timeline-item-top">
+                <div>
+                  <h3>{{this.title}}</h3>
+                  <p class="muted">{{this.description}}</p>
+                </div>
+                <span class="status-pill {{statusClass this.status}}">{{this.status}}</span>
+              </div>
+              <div class="meta-row">
+                <span class="date-pill">{{this.project.name}}</span>
+                {{#if this.assignedTo}}
+                  <span class="date-pill">{{this.assignedTo.name}}</span>
+                {{else}}
+                  <span class="date-pill">Unassigned</span>
+                {{/if}}
+                <span class="date-pill">{{formatDate this.createdAt}}</span>
+              </div>
+            </article>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="empty-state">No recent tasks yet. Add the first task to start building a real working dashboard.</div>
+      {{/if}}
+    </section>
+  </div>
+
+  <div class="dashboard-stack">
+    <section class="panel-card">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Next Up</span>
+          <h2 class="h3">Due soon</h2>
+        </div>
+      </div>
+
+      {{#if dueSoonTasks.length}}
+        <div class="timeline-list">
+          {{#each dueSoonTasks}}
+            <article class="project-compact-item">
+              <h3>{{this.title}}</h3>
+              <p class="muted">{{this.project.name}}</p>
+              <div class="meta-row">
+                <span class="status-pill {{statusClass this.status}}">{{this.status}}</span>
+                <span class="date-pill">{{formatDate this.dueDate}}</span>
+              </div>
+            </article>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="empty-state">Nothing urgent right now. Once tasks get due dates, this panel will surface what needs attention first.</div>
+      {{/if}}
+    </section>
+
+    <section class="panel-card">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Quick Access</span>
+          <h2 class="h3">Take action</h2>
+        </div>
+      </div>
+      <div class="action-tile-grid">
+        <a href="/projects/new" class="action-tile">
+          <strong>Start a new project</strong>
+          <span class="muted">Create a fresh initiative and begin organizing work.</span>
+        </a>
+        <a href="/tasks/new" class="action-tile">
+          <strong>Assign a task</strong>
+          <span class="muted">Capture a deliverable and give it an owner right away.</span>
+        </a>
+        <a href="/users" class="action-tile">
+          <strong>Review your team</strong>
+          <span class="muted">Check who can receive tasks and how roles are distributed.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel-card">
+      <div class="section-heading">
+        <div>
+          <span class="page-eyebrow">Projects</span>
+          <h2 class="h3">Recently created</h2>
+        </div>
+      </div>
+      {{#if projects.length}}
+        <div class="project-compact-list">
+          {{#each projects}}
+            <article class="project-compact-item">
+              <h3><a href="/projects/{{this._id}}">{{this.name}}</a></h3>
+              <p class="muted">{{this.description}}</p>
+              <div class="meta-row">
+                <span class="date-pill">{{formatDate this.createdAt}}</span>
+              </div>
+            </article>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="empty-state">No projects yet. Your latest projects will appear here once the workspace starts filling up.</div>
+      {{/if}}
+    </section>
   </div>
 </div>

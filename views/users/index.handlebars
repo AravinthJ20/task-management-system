@@ -1,22 +1,28 @@
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Users</h1>
+<section class="page-header">
+  <div>
+    <span class="page-eyebrow">Team</span>
+    <h1 class="page-title">People and roles</h1>
+    <p class="page-subtitle">Keep a clear view of who is in the system and what role they play across projects and assignments.</p>
+  </div>
   <a class="btn btn-primary" href="/users/new">New User</a>
-</div>
+</section>
 {{#if users.length}}
-  <table class="table table-striped">
-    <thead>
-      <tr><th>Name</th><th>Email</th><th>Role</th></tr>
-    </thead>
-    <tbody>
-      {{#each users}}
-        <tr>
-          <td>{{this.name}}</td>
-          <td>{{this.email}}</td>
-          <td>{{this.role}}</td>
-        </tr>
-      {{/each}}
-    </tbody>
-  </table>
+  <div class="table-shell">
+    <table class="table">
+      <thead>
+        <tr><th>Name</th><th>Email</th><th>Role</th></tr>
+      </thead>
+      <tbody>
+        {{#each users}}
+          <tr>
+            <td><strong>{{this.name}}</strong></td>
+            <td>{{this.email}}</td>
+            <td><span class="role-pill">{{this.role}}</span></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 {{else}}
-  <p>No users yet. Add a user to assign tasks.</p>
+  <div class="empty-state">No users yet. Add a user so tasks can be assigned with real ownership.</div>
 {{/if}}

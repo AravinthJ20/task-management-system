@@ -1,14 +1,21 @@
-<div class="row">
-  <div class="col-md-8 offset-md-2">
-    <h1>Create Project</h1>
-    <form action="/projects" method="POST">
+<section class="page-header">
+  <div>
+    <span class="page-eyebrow">New Project</span>
+    <h1 class="page-title">Launch a new initiative</h1>
+    <p class="page-subtitle">Give the work a clear name and a short description so your team knows what this project is for.</p>
+  </div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <form action="/projects" method="POST" class="form-card">
       <div class="mb-3">
         <label class="form-label">Name</label>
         <input type="text" name="name" class="form-control" required />
       </div>
       <div class="mb-3">
         <label class="form-label">Description</label>
-        <textarea name="description" class="form-control"></textarea>
+        <textarea name="description" class="form-control" rows="5" placeholder="Summarize the project goals, timeline, or expected outcome."></textarea>
       </div>
       <button type="submit" class="btn btn-success">Create Project</button>
     </form>
